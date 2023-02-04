@@ -13,7 +13,7 @@ jobs:
           java-version: '17'
 
       - name: Build
-        run: mvnw package
+        run: .\mvnw package
 
       - uses: graalvm/setup-graalvm@v1
         with:
