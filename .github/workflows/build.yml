@@ -1,0 +1,48 @@
+name: Build
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build
+        run: ./mvnw package
+
+      - name: Upload jars
+        uses: actions/upload-artifact@v3
+        with:
+          name: jars
+          path: target/wine-54432.jar
+          retention-days: 1
+
+  native-image:
+    needs: build
+    runs-on: $windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: '22.3.1'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-musl: true
+
+      - name: Build Windows x64 native image
+        run: native-image.cmd -jar jars/wine-54432.jar
+
+      - name: Upload native image
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}
+          path: wine*.exe
