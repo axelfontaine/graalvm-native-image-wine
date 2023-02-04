@@ -24,7 +24,7 @@ jobs:
 
   native-image:
     needs: build
-    runs-on: $windows-latest
+    runs-on: windows-latest
     timeout-minutes: 15
     steps:
       - name: Download all workflow run artifacts
