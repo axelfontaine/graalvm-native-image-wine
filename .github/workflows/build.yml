@@ -2,7 +2,6 @@ name: Build
 on: push
 jobs:
   native-image:
-    needs: build
     runs-on: windows-latest
     timeout-minutes: 15
     steps:
