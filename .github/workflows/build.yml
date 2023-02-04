@@ -36,7 +36,6 @@ jobs:
           java-version: '17'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          native-image-musl: true
 
       - name: Build Windows x64 native image
         run: native-image.cmd -jar jars/wine-54432.jar
